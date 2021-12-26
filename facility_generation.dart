@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class FacilityAddition {
   List<String> populateFacilityType(String type, int count) {
     List<String> facilityType = <String>[];
@@ -108,5 +110,56 @@ class LevelLayoutGeneration {
         throw Exception("Can't generate field!");
     }
     return generatedField;
+  }
+}
+
+class FacilityInsertion{
+  late List<List<String>> facilityList;
+  late List<List<String>> levelLayout;
+  var r = Random();
+  FacilityInsertion(List<List<String>> facList, List<List<String>> lLayout){
+    facilityList = facList;
+    levelLayout = lLayout;
+  }
+
+  List<List<String>> insert(){
+    int numFacilities = facilityCount(facilityList);
+    int numLevelSpots = facilityCount(levelLayout);
+    if(numFacilities == numLevelSpots){
+      for(int i = 0; i < levelLayout.length; i++){
+        for(int j = 0; j < levelLayout[i].length; j++){
+          int facilityType = r.nextInt(17);
+          while(facilityList[facilityType].isEmpty){
+            facilityType = r.nextInt(17);
+          }
+          levelLayout[i][j] = facilityList[facilityType].removeAt(0);
+        }
+      }
+      return levelLayout;
+    }
+    throw Exception("Spot mismatch!");
+  }
+
+  int facilityCount(List<List<String>> someList){
+    int numSpots = 0;
+    for(int i = 0; i < someList.length; i++){
+      for(int j = 0; j < someList[i].length; j++){
+        numSpots++;
+      }
+    }
+    return numSpots;
+  }
+
+  @override
+  String toString(){
+    String finalStr = "";
+    for(int i = 0; i < levelLayout.length; i++){
+      finalStr += "[ ";
+      for(int j = 0; j < levelLayout[i].length; j++){
+        finalStr += levelLayout[i][j] + " ";
+      }
+      finalStr += "]\n";
+    }
+    return finalStr;
   }
 }
